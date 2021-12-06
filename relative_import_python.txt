@@ -1,0 +1,37 @@
+Relative Import Package/Modules Python
+https://stackoverflow.com/questions/16981921/relative-imports-in-python-3
+
+#============================================================================================
+...which works fine when you run main.py or mypackage/mymodule.py, but fails with mypackage/myothermodule.py, due to the relative import...
+
+from .mymodule import as_int
+
+The way you're supposed to run it is...
+
+python3 -m mypackage.myothermodule
+
+...but it's somewhat verbose, and doesn't mix well with a shebang line like #!/usr/bin/env python3.
+
+The simplest fix for this case, assuming the name mymodule is globally unique, would be to avoid using relative imports, and just use...
+
+from mymodule import as_int
+
+...although, if it's not unique, or your package structure is more complex, you'll need to include the directory containing your package directory in PYTHONPATH, and do it like this...
+
+from mypackage.mymodule import as_int
+
+...or if you want it to work "out of the box", you can frob the PYTHONPATH in code first with this...
+
+import sys
+import os
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
+
+from mypackage.mymodule import as_int
+
+It's kind of a pain, but there's a clue as to why in an email written by a certain Guido van Rossum...
+
+    I'm -1 on this and on any other proposed twiddlings of the __main__ machinery. The only use case seems to be running scripts that happen to be living inside a module's directory, which I've always seen as an antipattern. To make me change my mind you'd have to convince me that it isn't.
+
+Whether running scripts inside a package is an antipattern or not is subjective, but personally I find it really useful in a package I have which contains some custom wxPython widgets, so I can run the script for any of the source files to display a wx.Frame containing only that widget for testing purposes.
