@@ -4,10 +4,10 @@
 # exclude patterns (uncomment them if you want to use them):
 # *.[oa]
 # *~
-!output/
+!/output
 output/*
 !/output/_test
 
-!input/
+!/input
 input/*
 !/input/_test
