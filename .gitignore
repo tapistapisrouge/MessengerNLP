@@ -6,8 +6,8 @@
 # *~
 !output/
 output/*
-!output/_test/
+!/output/_test
 
 !input/
 input/*
-!input/_test/
+!/input/_test
