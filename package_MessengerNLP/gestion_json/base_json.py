@@ -1,8 +1,17 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Nov 10 12:11:47 2021
+Module base_json
+--> contient des fonction qui list les fichiers json et les ouvrent de manière à pouvoir
+lister un certains nombre d'informations utiles : participants, reactions, caracteres, etc'
 
-@author: amaur
+Fonctions actuelles :
+    - list_files_json(chemin)
+    - list_participants_totale(list_files_json)
+    - list_cles_messages(list_files_json)
+    - list_reactions(list_files_json)
+    - dict_caracteres(list_files_json)
+    - list_annees(list_files_json)
+    - list_cles_messages(list_files_json)
 """
 
 #==============================================================================================
@@ -30,6 +39,12 @@ if __name__ == '__main__':
 #==============================================================================================
 
 def list_files_json(chemin):
+    
+    """
+    list_files_json(chemin)
+    --> 1 parametre : chemin = chemin du dossier input/nom_convers
+    --> 1 return : list des fichier json   
+    """
     
     # mettre le chemin en str
     chemin = str(chemin)

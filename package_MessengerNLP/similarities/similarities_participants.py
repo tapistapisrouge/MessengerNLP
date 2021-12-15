@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Nov 28 16:54:50 2021
-
-@author: amaur
+En cours d'écriture, un peu de silence !'
 """
 
 

@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Nov 29 00:13:04 2021
-
-@author: amaur
+En cours d'écriture, un peu de silence !'
 """
 
 from transformers import AutoTokenizer, TFAutoModelForSequenceClassification

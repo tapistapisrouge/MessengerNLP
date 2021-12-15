@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Sep  7 17:18:53 2021
-
 @author: AmauryP
 
 Fonctions utiles au traitement de base des fichiers json messenger :

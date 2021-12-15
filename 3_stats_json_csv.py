@@ -50,8 +50,8 @@ path_convers_output = pathlib.Path(path_convers_output, dossier_convers)
 print(path_convers_output)
 
 # recup dataframe
-path_convers_messenger = pathlib.Path(path_convers_output, 'dt_messenger.csv')
-dt_messenger = pd.read_csv(path_convers_messenger, sep=';', decimal='.')
+path_convers_messenger = pathlib.Path(path_convers_output, 'df_messenger.csv')
+df_messenger = pd.read_csv(path_convers_messenger, sep=';', decimal='.')
 
 #==============================================================================================
 # infos de base
@@ -84,35 +84,72 @@ list_reactions = base_json.list_reactions(list_files_json)
 # If parents is false (the default), a missing parent raises FileNotFoundError.
 # If exist_ok is false (the default), FileExistsError is raised if the target directory already exists.
 path_stats_csv = pathlib.Path(path_convers_output, 'stats_csv')
-path_stats_csv.mkdir(parents=True, exist_ok=True)
+path_stats_csv.mkdir(parents=False, exist_ok=True)
 path_stats_json = pathlib.Path(path_convers_output, 'stats_json')
-path_stats_json.mkdir(parents=True, exist_ok=True)
+path_stats_json.mkdir(parents=False, exist_ok=True)
 
-# stats csv
+
+# stats json =========================================================================
+
+# stats globales
+df_stats_globales, df_stats_globales_pourcentage, df_stats_globales_group, df_stats_globales_pourcentage_group = stats_json.json_stats_globales(list_files_json, list_participants, list_annees, list_cles, other_participant=False)
+
+path_df_stats_globales = pathlib.Path(path_stats_json, "df_stats_globales.csv")
+df_stats_globales.to_csv(path_df_stats_globales, encoding='utf-8-sig', sep=';', decimal='.', index=False)
+
+path_df_stats_globales_pourcentage = pathlib.Path(path_stats_json, "df_stats_globales_pourcentage.csv")
+df_stats_globales_pourcentage.to_csv(path_df_stats_globales_pourcentage, encoding='utf-8-sig', sep=';', decimal='.', index=False)
+
+path_df_stats_globales_group = pathlib.Path(path_stats_json, "df_stats_globales_group.csv")
+df_stats_globales_group.to_csv(path_df_stats_globales_group, encoding='utf-8-sig', sep=';', decimal='.', index=False)
+
+path_df_stats_globales_pourcentage_group = pathlib.Path(path_stats_json, "df_stats_globales_pourcentage_group.csv")
+df_stats_globales_pourcentage_group.to_csv(path_df_stats_globales_pourcentage_group, encoding='utf-8-sig', sep=';', decimal='.', index=False)
+
+# reactions
+df_reactions, df_reactions_group = stats_json.reaction_infos(list_files_json, list_participants, list_annees, list_reactions, other_participant=False)
+    
+path_df_reactions = pathlib.Path(path_stats_json, "df_reactions.csv")
+df_reactions.to_csv(path_df_reactions, encoding='utf-8-sig', sep=';', decimal='.', index=False)
+
+path_df_reactions_group = pathlib.Path(path_stats_json, "df_reactions_group.csv")
+df_reactions_group.to_csv(path_df_reactions_group, encoding='utf-8-sig', sep=';', decimal='.', index=False)
+
+#kick
+df_kick, df_kick_group = stats_json.kick_infos(list_files_json, list_participants, list_annees, other_participant=False)
+
+path_df_kick = pathlib.Path(path_stats_json, "df_kick.csv")
+df_kick.to_csv(path_df_kick, encoding='utf-8-sig', sep=';', decimal='.', index=False)
+
+path_df_kick_group = pathlib.Path(path_stats_json, "df_kick_group.csv")
+df_kick_group.to_csv(path_df_kick_group, encoding='utf-8-sig', sep=';', decimal='.', index=False)
+
+
+# stats csv ==================================================================
 
 #muet
-dt_muet = stats_df.dt_muet(dt_messenger)
-path_muet = pathlib.Path(path_stats_csv, "dt_muet.csv")
-dt_muet.to_csv(path_muet, encoding='utf-8-sig', sep=';', decimal='.', index=False)
+df_muet = stats_df.df_muet(df_messenger)
+path_muet = pathlib.Path(path_stats_csv, "df_muet.csv")
+df_muet.to_csv(path_muet, encoding='utf-8-sig', sep=';', decimal='.', index=False)
 
 #nb_message
-dt_annees, dt_annees_mois = stats_df.dt_nb_messages(dt_messenger)
-path_annees = pathlib.Path(path_stats_csv, "dt_annees.csv")
-path_annees_mois = pathlib.Path(path_stats_csv, "dt_annees_mois.csv")
+df_annees, df_annees_mois = stats_df.df_nb_messages(df_messenger)
+path_annees = pathlib.Path(path_stats_csv, "df_annees.csv")
+path_annees_mois = pathlib.Path(path_stats_csv, "df_annees_mois.csv")
 
-dt_annees.to_csv(path_annees, encoding='utf-8-sig', sep=';', decimal='.', index=False)
-dt_annees_mois.to_csv(path_annees_mois, encoding='utf-8-sig', sep=';', decimal='.', index=False)   
+df_annees.to_csv(path_annees, encoding='utf-8-sig', sep=';', decimal='.', index=False)
+df_annees_mois.to_csv(path_annees_mois, encoding='utf-8-sig', sep=';', decimal='.', index=False)   
 
 #==========================================================================================
 # graphique
 
 # annees uniquement =======================================================================
-dt_annees.dtypes
-dt_annees['annees']= dt_annees['annees'].apply(np.int64)
-dt_annees = dt_annees.sort_values('annees', ascending=True)
-dt_annees['annees'] =  pd.to_datetime(dt_annees['annees'], format='%Y')
+df_annees.dtypes
+df_annees['annees']= df_annees['annees'].apply(np.int64)
+df_annees = df_annees.sort_values('annees', ascending=True)
+df_annees['annees'] =  pd.to_datetime(df_annees['annees'], format='%Y')
 
-list_col = list(dt_annees.columns)
+list_col = list(df_annees.columns)
 list_col.remove('annees')
 print(list_col)
 
@@ -120,7 +157,7 @@ list_couleur = ['#0e670c','#05a1d1' ,'#e00dd7' ,'#d17a05' ,'#75de28', '#1705d1',
 
 plt.figure(figsize=(20,12))
 for col in list_col:
-    plt.plot(dt_annees['annees'], dt_annees[col], color=list_couleur[0], linewidth=3, label=col)
+    plt.plot(df_annees['annees'], df_annees[col], color=list_couleur[0], linewidth=3, label=col)
     del list_couleur[0]    
 # suite
 plt.xlabel('Années',fontsize=22)
@@ -139,20 +176,20 @@ plt.savefig(path_graph_annee)
 
 
 # annees et mois =======================================================================
-dt_annees_mois['annees']= dt_annees_mois['annees'].apply(str)
-dt_annees_mois['mois']= dt_annees_mois['mois'].apply(str)
-print(dt_annees_mois.dtypes)
+df_annees_mois['annees']= df_annees_mois['annees'].apply(str)
+df_annees_mois['mois']= df_annees_mois['mois'].apply(str)
+print(df_annees_mois.dtypes)
 
-dt_annees_mois["annees-mois"] = dt_annees_mois[['annees', 'mois']].apply('-'.join, axis=1)
+df_annees_mois["annees-mois"] = df_annees_mois[['annees', 'mois']].apply('-'.join, axis=1)
 
-dt_annees_mois['annees']= dt_annees_mois['annees'].apply(np.int64)
-dt_annees_mois['mois']= dt_annees_mois['mois'].apply(np.int64)
-dt_annees_mois = dt_annees_mois.sort_values(['annees', 'mois'], ascending=[True, True])
-dt_annees_mois.dtypes
+df_annees_mois['annees']= df_annees_mois['annees'].apply(np.int64)
+df_annees_mois['mois']= df_annees_mois['mois'].apply(np.int64)
+df_annees_mois = df_annees_mois.sort_values(['annees', 'mois'], ascending=[True, True])
+df_annees_mois.dtypes
 
 # dt_annees_mois['annees-mois'] =  pd.to_datetime(dt_annees_mois['annees-mois'], format='%Y-%m')
 
-list_col = list(dt_annees_mois.columns)
+list_col = list(df_annees_mois.columns)
 list_col.remove('annees')
 list_col.remove('mois')
 list_col.remove('annees-mois')
@@ -162,7 +199,7 @@ list_couleur = ['#0e670c','#05a1d1' ,'#e00dd7' ,'#d17a05' ,'#75de28', '#1705d1',
 
 plt.figure(figsize=(20,12))
 for col in list_col:
-    plt.plot(dt_annees_mois['annees-mois'], dt_annees_mois[col], color=list_couleur[0], linewidth=3, label=col)
+    plt.plot(df_annees_mois['annees-mois'], df_annees_mois[col], color=list_couleur[0], linewidth=3, label=col)
     del list_couleur[0]    
 # suite
 plt.xlabel('Années',fontsize=22)
