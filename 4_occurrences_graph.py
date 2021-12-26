@@ -45,7 +45,7 @@ print(path_convers_csv)
 df_messenger = pd.read_csv(path_convers_csv, sep=';', decimal='.')
     
 # liste des mots à chercher
-list_mots = ['queinec', 'courbou', 'poste', 'merde', 'mec', 'comté', 'belfort', 'bannalec', 'fromage']
+list_mots = ['caroline', 'amaury', 'merde', 'pourquoi', 'fromage', 'non', 'oui']
 
 # occurrence infos
 df_occurrence, df_occurrence_frequence, df_occurrence_nb = stats_occurrences.occurence(df_messenger, list_mots, col_message='message_clean_lower_ponctuation')   
